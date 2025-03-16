@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  # Serviço do Node.js
+  app:
+    build: .
+    container_name: node_app_despesas
+    ports:
+      - "3000:3000"  # Mapeando a porta 3000 do container para a porta 3000 da máquina
+    volumes:
+      - .:/app  # Sincronizando o código entre o container e a máquina
+
+      

@@ -36,7 +36,7 @@ const SelectCategorias = ( { className, filterCategories, insertFilterCategories
     const id = open ? 'simple-popper' : undefined;
     return (
         <div className={`${ className } grid grid-cols-12 relative`}>    
-            <span className="text-xs text-violet-200 bg-violet-900 px-1 absolute left-3 -top-2">Categorias</span>        
+            <span className="text-xs text-violet-900 bg-violet-200 rounded-sm px-1 absolute left-3 -top-2">Categorias</span>
             <div className="col-span-12 grid grid-cols-12 min-h-10">                
                 <Box className="flex col-span-11 border border-violet-200 
                 rounded-xl rounded-r-none items-center p-2 gap-1 flex-wrap"
@@ -54,7 +54,7 @@ const SelectCategorias = ( { className, filterCategories, insertFilterCategories
                         })
                     }                
                 </Box>
-                <button className="border border-violet-200 rounded-xl rounded-l-none bg-violet-900"
+                <button className="border border-violet-200 rounded-xl rounded-l-none"
                 onClick={handleClick}
                 >
                 <ArrowDropDownSharpIcon />

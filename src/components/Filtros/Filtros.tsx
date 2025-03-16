@@ -13,7 +13,7 @@ const Filtros = ( props: FiltrosProps ) => {
     } = useFiltros()
 
     return (
-        <div className={`${ props.className } bg-violet-900 text-violet-200 gap-2 py-4 px-2 grid grid-cols-12`}>
+        <div className={`${ props.className } text-violet-200 gap-2 py-4 px-2 grid grid-cols-12`}>
             <SelectCategorias 
             filterCategories={filterCategories}
             insertFilterCategories={insertFilterCategories}
@@ -22,7 +22,7 @@ const Filtros = ( props: FiltrosProps ) => {
             className="col-span-6 "/>
         
             <div className="col-span-3 border border-violet-200 rounded-lg px-2 relative h-fit">
-            <span className="text-xs text-violet-200 bg-violet-900 px-1 absolute left-3 -top-2">Data Inicial</span>        
+            <span className="text-xs text-violet-900 bg-violet-200 rounded-sm px-1 absolute left-3 -top-2">Data Inicial</span>        
                 <input className=" text-violet-200 w-full py-2 outline-0"
                     type="date" 
                     value={filterInitialDate}
@@ -32,7 +32,7 @@ const Filtros = ( props: FiltrosProps ) => {
             </div>
 
             <div className="col-span-3 border border-violet-200 rounded-lg px-2 relative h-fit">
-            <span className="text-xs text-violet-200 bg-violet-900 px-1 absolute left-3 -top-2">Data Final</span>                        
+            <span className="text-xs text-violet-900 bg-violet-200 rounded-sm px-1 absolute left-3 -top-2">Data Final</span>                        
                 <input className="text-violet-200 w-full py-2 outline-0"
                     type="date" 
                     value={filterFinalDate}

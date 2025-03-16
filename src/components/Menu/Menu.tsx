@@ -21,11 +21,11 @@ const Menu = ( props: MenuProps ) => {
                     <HomeIcon /> <a href="/"  className="no-underline my-3">Home</a>
                 </div>
                 <button  
-                    className="flex gap-3 items-center my-3" 
+                    className="flex gap-3 items-center my-3 cursor-pointer" 
                     onClick={() => setOpen(!open)}
                 ><AddCircleOutlineIcon /> Inserir
                 </button>
-                <div className={`${open? 'h-auto': 'h-0'}`}>
+                <div className={`${open? 'h-auto': 'h-0'} overflow-hidden`}>
                     <div className={`grid  transition-all duration-300 ease-in-out
                             ${open? 'grid-rows[1fr] opacity-100' : 'grid-rows[0fr] opacity-0'}
                         `}
@@ -36,7 +36,7 @@ const Menu = ( props: MenuProps ) => {
                         <div className="flex gap-3 items-center mb-3 ml-4">
                             <CategoryIcon /><a href="/categorias/inserir" className="no-underline ">Categoria</a>                            
                         </div>
-                        <div className="lex gap-3 items-center mb-3 ml-4">
+                        <div className="flex gap-3 items-center mb-3 ml-4">
                             <CurrencyExchangeIcon /><a href="/movimentacoes/inserir" className="no-underline ">Movimentação</a>                            
                         </div> 
                     </div>

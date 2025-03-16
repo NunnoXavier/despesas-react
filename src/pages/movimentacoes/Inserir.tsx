@@ -20,7 +20,7 @@ const InserirMov = () => {
     },[])
 
     return (
-        <div className="">
+        <div className="bg-slate-100">
             <h3 className="text-2xl font-bold text-center">Inserir Movimentação</h3>
             <div className="grid grid-cols-12 px-4 gap-4">
                 <Input 

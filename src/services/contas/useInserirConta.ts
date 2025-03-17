@@ -1,5 +1,5 @@
 import { Account } from "../../services/type"
-import { ChangeEvent, useEffect, useReducer, useState } from "react"
+import { ChangeEvent, useReducer, useState } from "react"
 import { SumAccount } from "./sumContas"
 import useMyContext from "../usecontext"
 

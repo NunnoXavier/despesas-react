@@ -3,16 +3,15 @@ import { Category, Movimentacao, SumCategory } from "../type"
 import axios from 'axios'
 import { FetchError } from "../usecontext"
 
-
-
 const useCategorias = () => {
     
+    const apiUrl = import.meta.env.VITE_API_URL
     const [ categorias, setCategorias ] = useState<Category[]>([])
     const [ loadingCategorias, setLoading ] = useState<boolean>(false)
     const [ errorCategorias, setError ] = useState<FetchError>(null)
     
     const totalizarCategorias = (movimentacoes: Movimentacao[]):SumCategory[] =>{
-    
+        
         return categorias
             .map((cat) => {
                 const sum = movimentacoes
@@ -53,7 +52,7 @@ const useCategorias = () => {
     const fetchCategorias = async () => {
         try {
             setLoading(true)
-            const res = await axios.get("http://localhost:3001/categorias", { timeout: 600 })
+            const res = await axios.get(`${apiUrl}/categorias`, { timeout: 600 })
             const cat: Category[] = res.data.resposta
             setCategorias(cat)
         } catch (error:any) {

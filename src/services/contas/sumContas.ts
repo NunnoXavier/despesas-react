@@ -28,13 +28,13 @@ const getSumAccount = ( transactions: Movimentacao[], id: number ):number => {
 
 const sumContas = ( props: SumContasProps ) => {
 
-    const { accounts } = useContas()
+    const { contas } = useContas()
 
 
     //cria resumo das transaçoes por conta
     const sumAccounts:SumAccount[] = []
 
-    accounts.map((account) => {
+    contas.map((account) => {
         sumAccounts.push({
             ...account,
             sum: getSumAccount(props.movimentacoes, account.id)

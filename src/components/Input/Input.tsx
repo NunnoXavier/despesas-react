@@ -13,8 +13,8 @@ type InputProps = {
 const Input = ( { type, className, label, bg, value, onChange, id }:InputProps ) => {
 
     return (
-        <div className={`${className} border border-gray-400 rounded-md px-2 relative h-fit`}>
-            <span className={`text-xs text-gray-400 ${bg || 'bg-white'}  px-1 absolute left-3 -top-2`}>{ label }</span>
+        <div className={`${className} border border-slate-300 rounded-md px-2 relative h-fit`}>
+            <span className={`text-xs text-slate-400 ${bg || 'bg-white'}  px-1 absolute left-3 -top-2`}>{ label }</span>
             <input 
                 type={ type } 
                 id={id}

@@ -74,6 +74,7 @@ const initialState:ITransaction = {
 
 
 const useTrans = () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const [ state, dispatch ] = useReducer(reducer, initialState)
     const [ mensagem, setMensagem ] = useState("")
     const { categorias, fetchCategorias  } = useCategorias()
@@ -171,8 +172,8 @@ const useTrans = () => {
                 idcategory: categoriaDestino.id,
             }
             
-            await axios.put('http://localhost:3001/movimentacoes', movO)
-            await axios.put('http://localhost:3001/movimentacoes', movD)
+            await axios.put(`${apiUrl}/movimentacoes`, movO)
+            await axios.put(`${apiUrl}/movimentacoes`, movD)
             setMensagem("Tranferência efetuada com sucesso")          
         } catch (error:any) {
             setMensagem("Ocorreu um erro ao efetuar tranferencia! " + error.message)          

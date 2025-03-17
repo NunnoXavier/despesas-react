@@ -14,7 +14,7 @@ const Menu = ( props: MenuProps ) => {
     const [open, setOpen ] = useState(false)
     
     return (
-        <div className={` py-5 pl-5 [&_ul]:pl-5 font-serif${props.className}`}>
+        <div className={` py-5 pl-5 text-cyan-100 font-serif${props.className}`}>
             <h1 className="text-2xl font-bold pb-5">MENU</h1>
             <div className="**:font-semibold flex flex-col">
                 <div className="flex gap-3 items-center">

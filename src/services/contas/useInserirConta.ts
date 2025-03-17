@@ -1,6 +1,7 @@
 import { Account } from "../../services/type"
-import { ChangeEvent, useReducer, useState } from "react"
-import axios from 'axios'
+import { ChangeEvent, useEffect, useReducer, useState } from "react"
+import { SumAccount } from "./sumContas"
+import useMyContext from "../usecontext"
 
 export interface IAccount {
     id: any,
@@ -39,7 +40,10 @@ const initialState:IAccount = {
 const useInserirCon = () => {
     const [ state, dispatch ] = useReducer(reducer, initialState)
     const [ mensagem, setMensagem ] = useState("")
-    
+
+    const { totalizarContas, deleteConta, inserirConta, movimentacoes } = useMyContext()
+
+    const totaisContas = totalizarContas(movimentacoes)
 
     const validarDados = ( state:IAccount ):boolean => {
         try {
@@ -73,7 +77,7 @@ const useInserirCon = () => {
                 description: state.description,
             }
 
-            await axios.put('http://localhost:3001/contas', con)
+            inserirConta(con)
             setMensagem("Conta inserida com sucesso")          
         } catch (error) {
             console.log(error)
@@ -82,13 +86,26 @@ const useInserirCon = () => {
 
     }
 
+    const deletar = ( conta:SumAccount | Account ) => {
+        if(!confirm(`Confirma deletar a Conta ${ conta.description }?`)) return
+        try {
+            deleteConta(conta.id)
+            setMensagem('conta deletada')            
+        } catch (error:any) {
+            setMensagem(`Erro ao deletar conta: 
+                ${error.message}`)
+        }
+    }
+
     return {
         id: state.id,
         description: state.description,
         mensagem,
         setId,
         setDescr,
-        salvar        
+        salvar,
+        deletar,
+        totaisContas        
     }
 
 

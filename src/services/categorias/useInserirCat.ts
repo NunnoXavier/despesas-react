@@ -44,6 +44,7 @@ const initialState:ICategory = {
 
 
 const useInserirCat = () => {
+    const apiUrl = import.meta.env.VITE_API_URL
     const [ state, dispatch ] = useReducer(reducer, initialState)
     const [ mensagem, setMensagem ] = useState("")
     
@@ -85,7 +86,7 @@ const useInserirCat = () => {
                 type: state.type
             }
 
-            await axios.put('http://localhost:3001/categorias', cat)
+            await axios.put(`${apiUrl}/categorias`, cat)
             setMensagem("Categoria inserida com sucesso")          
         } catch (error) {
             console.log(error)

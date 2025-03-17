@@ -22,7 +22,9 @@ type Context = {
     contas: Account[],
     totalizarContas: (movimentacoes: Movimentacao[]) => SumAccount[],    
     loadingContas: boolean,
-    errorContas: FetchError
+    errorContas: FetchError,
+    deleteConta: (id:number) => Promise<void>,
+    inserirConta: (conta:Account) => Promise<void>
 }
 
 const InitialContext = {
@@ -39,27 +41,29 @@ const InitialContext = {
     contas: [],
     totalizarContas: () => [],        
     loadingContas: false,
-    errorContas: null        
+    errorContas: null,
+    deleteConta: async() => undefined,
+    inserirConta: async() => undefined
 }
 
 const MyContext = createContext<Context>(InitialContext)
 
 export const  MyProvider = function({ children }: { children: React.ReactNode }){  
     const { categorias, totalizarCategorias, loadingCategorias, errorCategorias, fetchCategorias } = useCategorias()
-    const { contas, totalizarContas, loadingContas, errorContas, fetchContas } = useContas()
+    const { contas, totalizarContas, loadingContas, errorContas, fetchContas, deleteConta, inserirConta } = useContas()
     const { movimentacoes, loadingMovimentacoes, errorMovimentacoes, fetchMovimentacoes,
         movimentacoesFiltro, setMovimentacoesFiltro, deleteMovimentacao } = useMovimentacoes()
     
     useEffect(() => {
-        fetchMovimentacoes()        
-        .then(() => fetchCategorias())
-        .then(() => fetchContas())
+        fetchMovimentacoes()
+        .then(() => fetchCategorias())        
+        .then(() => fetchContas())        
     },[])
 
     return(
         <MyContext.Provider value={{ 
             categorias, totalizarCategorias, loadingCategorias, errorCategorias,
-            contas, totalizarContas, loadingContas, errorContas,
+            contas, totalizarContas, loadingContas, errorContas, deleteConta, inserirConta,
             movimentacoesFiltro, setMovimentacoesFiltro, deleteMovimentacao, 
             movimentacoes,loadingMovimentacoes, errorMovimentacoes             
         }}>

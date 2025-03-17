@@ -5,6 +5,7 @@ import { FetchError } from "../usecontext"
 
 
 const useMovimentacoes = () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     
     const [ movimentacoes, setMovimentacoes ] = useState<Movimentacao[]>([])
     const [ movimentacoesFiltro, setMovimentacoesFiltro ] = useState<Movimentacao[]>([])
@@ -14,11 +15,11 @@ const useMovimentacoes = () => {
     const fetchMovimentacoes = async () => {
         try {
             setLoading(true)
-            const c = await axios.get("http://localhost:3001/categorias", { timeout: 600 })
+            const c = await axios.get(`${apiUrl}/categorias`, { timeout: 600 })
             const cats:Category[] = c.data.resposta
-            const a = await axios.get("http://localhost:3001/contas", { timeout: 600 })
+            const a = await axios.get(`${apiUrl}/contas`, { timeout: 600 })
             const accs:Account[] = a.data.resposta
-            const res = await axios.get("http://localhost:3001/movimentacoes", { timeout: 600 })
+            const res = await axios.get(`${apiUrl}/movimentacoes`, { timeout: 600 })
             const trans: Transaction[] = res.data.resposta
             const mov:Movimentacao[] = trans.map((t) => {
                 return {
@@ -41,7 +42,7 @@ const useMovimentacoes = () => {
     const deleteMovimentacao = async(id:number) => {
         try {
             setLoading(true)
-            await axios.delete('http://localhost:3001/movimentacoes', { data: { id: id } })
+            await axios.delete(`${apiUrl}/movimentacoes`, { data: { id: id } })
             setMovimentacoes( movimentacoes.filter((m) => m.id!== id))
             setMovimentacoesFiltro( movimentacoes.filter((m) => m.id!== id))
         } catch (error:any) {

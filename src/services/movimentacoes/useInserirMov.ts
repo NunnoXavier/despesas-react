@@ -84,6 +84,7 @@ const initialState:ITransaction = {
 
 
 const useInserirMov = () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     const [ state, dispatch ] = useReducer(reducer, initialState)
     const [ mensagem, setMensagem ] = useState("")
     const [ corMensagem, setCorMensagem ] = useState("blue")    
@@ -169,7 +170,7 @@ const useInserirMov = () => {
                 idcategory: state.idcategory as number,
             }
 
-            await axios.put('http://localhost:3001/movimentacoes', mov)
+            await axios.put(`${apiUrl}/movimentacoes`, mov)
             sucesso = true         
             setMensagem("Movimentação inserida com sucesso")          
         } catch (error) {

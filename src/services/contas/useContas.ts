@@ -7,6 +7,7 @@ import { SumAccount } from "./sumContas"
 
 
 const useContas = () => {
+    const apiUrl = import.meta.env.VITE_API_URL;
     
     const [ contas, setContas ] = useState<Account[]>([])
     const [ loadingContas, setLoading ] = useState<boolean>(false)
@@ -34,7 +35,7 @@ const useContas = () => {
     const fetchContas = async () => {
         try {
             setLoading(true)
-            const res = await axios.get("http://localhost:3001/contas", { timeout: 600 })
+            const res = await axios.get(`${apiUrl}/contas`, { timeout: 600 })
             const acc: Account[] = res.data.resposta
             setContas(acc)
         } catch (error:any) {
@@ -45,12 +46,53 @@ const useContas = () => {
         }
     }
 
+    const inserirConta = async ( conta:Account ) => {
+        try {
+            setLoading(true)
+            await axios.put(`${apiUrl}/contas`, conta)
+            setContas( [ ...contas, conta ] )
+        } catch (error:any) {
+            setError(error.message)
+        }finally{
+            setLoading(false)
+        }
+    }
+
+    const deleteConta = async ( id:number ) => {
+        try {
+            setLoading(true)
+            axios.delete(`${apiUrl}/contas`, { data: {
+                id: id
+            } })
+            setContas(contas.filter((conta) => conta.id !== id))
+        } catch (error:any) {
+            setError(error.message)
+        }finally{
+            setLoading(false)
+        }
+    }
+
+    const updateConta = async ( newConta: Account ) => {
+        try {
+            setLoading(true)
+            axios.patch(`${apiUrl}/contas`, { data: newConta })
+            setContas(contas.map((conta) => conta.id !== newConta.id? newConta : conta))
+        } catch (error:any) {
+            setError(error.message)
+        }finally{
+            setLoading(false)
+        }
+    }
+
     return{
         contas,
         loadingContas,
         errorContas,
         fetchContas,
-        totalizarContas
+        totalizarContas,
+        updateConta,
+        deleteConta,
+        inserirConta
     }
 }
 

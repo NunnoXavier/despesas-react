@@ -1,8 +1,8 @@
 import CardCategoria from "./CardCategoria"
-import useMyContext from "../../services/usecontext"
-import { Box, Popper } from "@mui/material"
+import { Box, Popover as Popper } from "@mui/material"
 import { MouseEvent, useState } from "react"
 import ArrowDropDownSharpIcon from '@mui/icons-material/ArrowDropDownSharp'
+import useMyContext from "../../services/usecontext"
 
 type SelectCatProps = { 
     className?: string, 
@@ -20,6 +20,16 @@ const SelectCategorias = ( { className, filterCategories, insertFilterCategories
         setAnchorEl(anchorEl ? null : event.currentTarget);
       };
 
+      const handleClose = () =>{
+        setAnchorEl(null);
+      }
+
+    if(!categorias || categorias.length === 0){
+        return (
+            <>...</>
+        )
+    }
+
     const clickItem = ( event:MouseEvent<HTMLButtonElement> ) => {    
         insertFilterCategories && insertFilterCategories(event.currentTarget.innerHTML)
         setAnchorEl(null)
@@ -36,12 +46,10 @@ const SelectCategorias = ( { className, filterCategories, insertFilterCategories
     const id = open ? 'simple-popper' : undefined;
     return (
         <div className={`${ className } grid grid-cols-12 relative`}>    
-            <span className="text-xs text-violet-900 bg-violet-200 rounded-sm px-1 absolute left-3 -top-2">Categorias</span>
+            <span className="text-xs rounded-sm absolute left-4 -top-2 bg-slate-100 px-1">Categorias</span>
             <div className="col-span-12 grid grid-cols-12 min-h-10">                
-                <Box className="flex col-span-11 border border-violet-200 
-                rounded-xl rounded-r-none items-center p-2 gap-1 flex-wrap"
-                    // aria-controls={ }
-                    // aria-expanded={}
+                <Box className="flex col-span-11 border border-slate-300 
+                rounded-lg rounded-r-none items-center px-2 pt-4 pb-2 gap-1 flex-wrap min-h-12"
                 >
                     {
                         filterCategories?.map((description, index) => {
@@ -54,16 +62,20 @@ const SelectCategorias = ( { className, filterCategories, insertFilterCategories
                         })
                     }                
                 </Box>
-                <button className="border border-violet-200 rounded-xl rounded-l-none"
+                <button className="border border-slate-300 rounded-lg rounded-l-none"
                 onClick={handleClick}
                 >
                 <ArrowDropDownSharpIcon />
                 </button>
-                <Popper id={id} open={open} anchorEl={anchorEl}>
-                    <Box sx={{ border: 1, p: 1, display: 'flex', flexDirection:'column' , bgcolor: '#ffffff' }}>
-                        {categorias.map((categoria) => {
+                <Popper id={id} open={open} anchorEl={anchorEl} onClose={handleClose}>
+                    <Box sx={{ 
+                        border: 1, display: 'flex', flexDirection:'column' , 
+                        bgcolor: '#2e394e', maxHeight: '410px', overflow: "scroll",
+                        color: "#dbe6f2", borderRadius: "5px"
+                        }}>
+                        {categorias?.map((categoria) => {
                             return (
-                                <button  className="hover:bg-gray-300 w-full"
+                                <button  className="hover:bg-gray-300 hover:text-slate-600 w-full"
                                     key={categoria.id} 
                                     onClick={ clickItem }
                                 >{categoria.description}</button>

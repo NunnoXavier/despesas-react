@@ -1,10 +1,19 @@
 import useCurrency from "../../utils/useCurrency"
 import { Table, Head, Row, HeadRow } from "../../components/Table/Table"
 import useMyContext from "../../services/usecontext"
+import { styled } from "@mui/system"
 
 type ContasProps = {
     ClassName?: string,
 }
+
+const STh = styled('th')(() => ({
+    border: "2px solid #f1f5f9"
+}))
+
+const STd = styled('td')(() => ({
+    border: "2px solid #f1f5f9"
+}))
 
 const Contas = (props: ContasProps) =>{
     const { movimentacoes, totalizarContas, loadingContas, errorContas } = useMyContext()
@@ -34,22 +43,22 @@ const Contas = (props: ContasProps) =>{
             <Table>
                     <Head>
                         <HeadRow className="bg-cyan-800 text-slate-100">
-                            <th>Descrição</th>
-                            <th>Saldo</th>                        
+                            <STh>Descrição</STh>
+                            <STh>Saldo</STh>                        
                         </HeadRow>
                     </Head>
                 <tbody>
                 {
                     sumAccounts.map(( acc ) => (
                         <Row key={ acc.id } >
-                            <td>{acc.description}</td>
-                            <td 
+                            <STd>{acc.description}</STd>
+                            <STd 
                                 className={ `${ acc.sum < 0? "text-red-800" : "text-blue-800" }` }
                             >
                                 {
                                     useCurrency.toBR(acc.sum) 
                                 }
-                            </td>
+                            </STd>
 
                         </Row>
                     ))

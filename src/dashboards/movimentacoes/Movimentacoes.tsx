@@ -10,7 +10,12 @@ import { Movimentacao } from "../../services/type"
 const STh = styled('th')(() => ({
     // background: '#33dd77',
     padding: "0px 0px 0px 10px",
-    textAlign: "start"
+    textAlign: "start",
+    border: "2px solid #f1f5f9"
+}))
+
+const STd = styled('td')(() => ({
+    border: "2px solid #f1f5f9"
 }))
 
 type MovimentacoesProps = {
@@ -59,7 +64,7 @@ const Movimentacoes = (props: MovimentacoesProps) =>{
             
             <Table>
                     <Head>
-                        <HeadRow className="bg-emerald-600 text-slate-100">
+                        <HeadRow className="bg-cyan-800 text-slate-100">
                             <STh></STh>
                             <STh>Data</STh>
                             <STh>Descrição</STh>
@@ -77,19 +82,19 @@ const Movimentacoes = (props: MovimentacoesProps) =>{
                             key={ trans.id }
                             
                         >
-                            <td><Apagar onClick={apagar} color="error" fontSize="small" /></td>
-                            <td>{useDate.dateBr( trans.data )}</td>
-                            <td>{trans.description}</td>
-                            <td 
+                            <STd><Apagar onClick={apagar} color="error" fontSize="small" /></STd>
+                            <STd>{useDate.dateBr( trans.data )}</STd>
+                            <STd>{trans.description}</STd>
+                            <STd 
                                 className={ `${ trans.category?.type == "D"? "text-red-800" : "text-blue-800" }` }
                             >
                                 {
                                     `${trans.category?.type == "D"? "-" : "+"} 
                                     ${useCurrency.toBR(trans.amount) }` 
                                 }
-                            </td>
-                            <td>{trans.category?.description}</td>
-                            <td>{trans.account?.description}</td>
+                            </STd>
+                            <STd>{trans.category?.description}</STd>
+                            <STd>{trans.account?.description}</STd>
 
                         </Row>
                     ))

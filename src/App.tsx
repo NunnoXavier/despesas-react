@@ -9,7 +9,7 @@ function App() {
         <Menu />
       </div>
 
-      <div className="col-span-9 min-h-screen bg-slate-100">
+      <div className="col-span-10 min-h-screen bg-slate-100">
         <Filtros className="" />
         <MappedRoutes />
       </div>

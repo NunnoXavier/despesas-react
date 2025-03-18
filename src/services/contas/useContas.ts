@@ -49,8 +49,9 @@ const useContas = () => {
     const inserirConta = async ( conta:Account ) => {
         try {
             setLoading(true)
-            await axios.put(`${apiUrl}/contas`, conta)
-            setContas( [ ...contas, conta ] )
+            const res = await axios.put(`${apiUrl}/contas`, conta)
+            const id:number = res.data.resposta.id
+            setContas( [ ...contas, { ...conta, id: id } ] )
         } catch (error:any) {
             setError(error.message)
         }finally{

@@ -87,7 +87,11 @@ const useInserirCon = () => {
     }
 
     const deletar = ( conta:SumAccount | Account ) => {
+        const m = movimentacoes.filter((mov) => mov.idaccount === conta.id)
         if(!confirm(`Confirma deletar a Conta ${ conta.description }?`)) return
+        if(m.length > 0)
+            if(!confirm(`ATENCÃO! A conta  ${ conta.description } possui movimentações vinculadas a ela.
+            Ao deleta-la você TAMBEM deletará todas as movimentações vinculadas. Confirma`)) return
         try {
             deleteConta(conta.id)
             setMensagem('conta deletada')            

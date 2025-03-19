@@ -1,8 +1,9 @@
-import {useState } from "react"
+import {useEffect, useState } from "react"
 import { Account, Category, Movimentacao, Transaction } from "../type"
 import axios from 'axios'
-import { FetchError } from "../usecontext"
-
+import  { FetchError } from "../usecontext"
+import useCategorias from "../categorias/useCategorias"
+import useContas from "../contas/useContas"
 
 const useMovimentacoes = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
@@ -11,7 +12,14 @@ const useMovimentacoes = () => {
     const [ movimentacoesFiltro, setMovimentacoesFiltro ] = useState<Movimentacao[]>([])
     const [ loadingMovimentacoes, setLoading ] = useState<boolean>(false)
     const [ errorMovimentacoes, setError ] = useState<FetchError>(null)
+    const { categorias, fetchCategorias } = useCategorias()
+    const { contas, fetchContas } = useContas()
 
+    useEffect(() => {
+        fetchCategorias()
+        fetchContas()
+    },[])
+    
     const fetchMovimentacoes = async () => {
         try {
             setLoading(true)
@@ -52,6 +60,46 @@ const useMovimentacoes = () => {
         }
     }
 
+    const inserirMovimentacao = async (registro: Transaction) => {
+        try {            
+            setLoading(true)            
+            const res = await axios.put(`${apiUrl}/movimentacoes`, registro)            
+            const novoId:number = res.data.resposta.id
+            const mov:Movimentacao = {
+                ...registro,
+                id: novoId,
+                category: categorias.filter((cat) => cat.id === registro.idcategory)[0],
+                account: contas.filter((con) => con.id === registro.idaccount)[0],
+            }
+            setMovimentacoes([ ...movimentacoes, { ...mov } ])
+            return novoId
+        } catch (error:any) {
+            setError(error.message)
+            return 0
+        }finally{
+            setLoading(false)
+        }
+    }
+
+    const updateMovimentacao = async (registro: Transaction) => {
+        try {
+            setLoading(true)
+            await axios.patch(`${apiUrl}/movimentacoes`, registro)
+            const mov:Movimentacao = {
+                ...registro,
+                category: categorias.filter((cat) => cat.id === registro.idcategory)[0],
+                account: contas.filter((con) => con.id === registro.idaccount)[0],
+            }
+            console.log(mov)            
+            setMovimentacoes(movimentacoes.map((movimentacao) => movimentacao.id === mov.id? mov : movimentacao))
+        } catch (error:any) {
+            setError(error.message)
+            throw error
+        }finally{
+            setLoading(false)
+        }
+    }
+
     return{
         movimentacoes,
         loadingMovimentacoes,
@@ -59,7 +107,11 @@ const useMovimentacoes = () => {
         fetchMovimentacoes,
         movimentacoesFiltro,
         setMovimentacoesFiltro,
-        deleteMovimentacao
+        deleteMovimentacao,
+        inserirMovimentacao,
+        updateMovimentacao,
+        categorias,
+        contas
     }
 }
 

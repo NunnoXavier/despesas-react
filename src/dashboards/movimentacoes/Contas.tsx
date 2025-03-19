@@ -8,11 +8,18 @@ type ContasProps = {
 }
 
 const STh = styled('th')(() => ({
-    border: "2px solid #f1f5f9"
+    border: "2px solid #f1f5f9",
+    borderTop: "2px solid oklch(0.45 0.085 224.283)",
+    ":firstOfType":{
+        borderLeft: "2px solid oklch(0.45 0.085 224.283)",
+    },
+    "::lastOfType":{
+        borderRight: "2px solid oklch(0.45 0.085 224.283)",
+    }
 }))
 
 const STd = styled('td')(() => ({
-    border: "2px solid #f1f5f9"
+    border: "2px solid #f1f5f9",
 }))
 
 const Contas = (props: ContasProps) =>{

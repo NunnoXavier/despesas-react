@@ -46,14 +46,17 @@ const useContas = () => {
         }
     }
 
-    const inserirConta = async ( conta:Account ) => {
+    const inserirConta = async ( conta:Account ):Promise<number> => {
         try {
             setLoading(true)
             const res = await axios.put(`${apiUrl}/contas`, conta)
             const id:number = res.data.resposta.id
             setContas( [ ...contas, { ...conta, id: id } ] )
+            return id
         } catch (error:any) {
             setError(error.message)
+            throw error.message
+            return 0
         }finally{
             setLoading(false)
         }
@@ -68,6 +71,7 @@ const useContas = () => {
             setContas(contas.filter((conta) => conta.id !== id))
         } catch (error:any) {
             setError(error.message)
+            throw error.message
         }finally{
             setLoading(false)
         }
@@ -76,10 +80,11 @@ const useContas = () => {
     const updateConta = async ( newConta: Account ) => {
         try {
             setLoading(true)
-            axios.patch(`${apiUrl}/contas`, { data: newConta })
-            setContas(contas.map((conta) => conta.id !== newConta.id? newConta : conta))
+            await axios.patch(`${apiUrl}/contas`, newConta)
+            setContas(contas.map((conta) => conta.id === newConta.id? newConta : conta))
         } catch (error:any) {
             setError(error.message)
+            throw error.message
         }finally{
             setLoading(false)
         }

@@ -9,7 +9,7 @@ type ButtonProps = {
 const Button = ( { children, className, onClick }: ButtonProps ) => {
     return (
         <button 
-            className={` ${className} bg-slate-600 text-white rounded-md hover:bg-slate-400`}
+            className={` ${className} rounded-md hover:bg-slate-400`}
             onClick={onClick}
         >
             {children}

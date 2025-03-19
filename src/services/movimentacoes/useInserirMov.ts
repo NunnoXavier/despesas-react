@@ -1,7 +1,8 @@
 import { Transaction } from "../../services/type"
-import { ChangeEvent, useEffect, useReducer, useState } from "react"
+import { useEffect, useReducer, useState } from "react"
 import useDate from "../../utils/useDate";
-import axios from 'axios'
+import useMyContext from "../usecontext";
+import useMovimentacoes from "./useMovimentacoes";
 
 export interface ITransaction {
     id: string,
@@ -84,36 +85,68 @@ const initialState:ITransaction = {
 
 
 const useInserirMov = () => {
-    const apiUrl = import.meta.env.VITE_API_URL;
     const [ state, dispatch ] = useReducer(reducer, initialState)
+    const { movimentacoes, inserirMovimentacao, updateMovimentacao } = useMyContext()
     const [ mensagem, setMensagem ] = useState("")
-    const [ corMensagem, setCorMensagem ] = useState("blue")    
-    let sucesso = false
+    const [ corMensagem, setCorMensagem ] = useState< 'sucess' | 'alert' | 'error' >('sucess')    
+    const [ modo, setModo ] = useState<'INSERIR' | 'ALTERAR'>('INSERIR')
+    const { contas, categorias } = useMovimentacoes()
     
     useEffect(() => {
-        setCorMensagem(sucesso? "blue" : "red")
-    },[mensagem])
+        const registroAtual = movimentacoes.filter((movimentacao) => movimentacao.id === Number(state.id))[0]
+        if( registroAtual ){
+            dispatch({ type: "SET_DESCR", payload: registroAtual.description })
+            dispatch({ type: "SET_DATA", payload: useDate.parse(registroAtual.data) })
+            dispatch({ type: "SET_VALOR", payload: registroAtual.amount.toFixed(2) })
+            dispatch({ type: "SET_CATEGORIA", payload: registroAtual.idcategory })
+            dispatch({ type: "SET_CONTA", payload: registroAtual.idaccount })
+            dispatch({ type: "SET_DESCR_CATEGORIA", payload: registroAtual.idcategory.toString() })
+            dispatch({ type: "SET_DESCR_CONTA", payload: registroAtual.idaccount.toString() })
+            setModo("ALTERAR")
+        }else{
+            dispatch({ type: "SET_ID", payload: "" })
+            dispatch({ type: "SET_DESCR", payload: "" })
+            dispatch({ type: "SET_DATA", payload: "" })
+            dispatch({ type: "SET_VALOR", payload: "" })
+            dispatch({ type: "SET_CATEGORIA", payload: 0 })
+            dispatch({ type: "SET_CONTA", payload: 0 })            
+            dispatch({ type: "SET_DESCR_CATEGORIA", payload: "" })
+            dispatch({ type: "SET_DESCR_CONTA", payload: "" })
+            setModo("INSERIR")
+        }
+    },[state.id, movimentacoes])
 
+   
     const validarDados = ( state:ITransaction ):boolean => {
         try {
+            if(modo === "ALTERAR" && Number(state.id) ===0){
+                setCorMensagem("alert")
+                setMensagem("ID inválido")
+                return false     
+            }
+
             if(!state.data){
+                setCorMensagem("alert")
                 setMensagem("Data inválida")
                 return false
 
             }
             
             if(Number(state.amount) <= 0){
+                setCorMensagem("alert")
                 setMensagem("Valor inválido")
                 return false
 
             }
 
             if(state.idaccount <= 0){
+                setCorMensagem("alert")
                 setMensagem("Conta inválida")
                 return false
             }
 
             if(state.idcategory <= 0){
+                setCorMensagem("alert")
                 setMensagem("Categoria inválida")
                 return false
             }
@@ -124,17 +157,17 @@ const useInserirMov = () => {
         }
     } 
 
-    const setId = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch({ type: "SET_ID", payload: e.currentTarget.value })
+    const setId = (e: string) => {
+        dispatch({ type: "SET_ID", payload: e })
         setMensagem("")          
     }
-    const setDescr = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch({type: "SET_DESCR", payload: e.currentTarget.value })
+    const setDescr = (e: string) => {
+        dispatch({type: "SET_DESCR", payload: e })
         setMensagem("")          
     }
-    const setValor = (e: ChangeEvent<HTMLInputElement>) => {
+    const setValor = (e: string) => {
         try {
-            const valor = e.currentTarget.value
+            const valor = e
             dispatch({ type: "SET_VALOR", payload: valor })                
             setMensagem("")          
 
@@ -142,18 +175,18 @@ const useInserirMov = () => {
             return
         }
     }
-    const setData = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch({ type: "SET_DATA", payload: e.currentTarget.value.slice(0,10) })
+    const setData = (e: string) => {
+        dispatch({ type: "SET_DATA", payload: e })
         setMensagem("")          
     }
-    const setCategoria = (e: ChangeEvent<HTMLSelectElement>) => {
-        dispatch({type: "SET_CATEGORIA", payload: Number(e.currentTarget.selectedOptions[0].value)})
-        dispatch({type: "SET_DESCR_CATEGORIA", payload: e.currentTarget.value })
+    const setCategoria = (e: string) => {
+        dispatch({type: "SET_CATEGORIA", payload: Number(e)})
+        dispatch({type: "SET_DESCR_CATEGORIA", payload: e })
         setMensagem("")          
     }
-    const setConta = (e: ChangeEvent<HTMLSelectElement>) => {
-        dispatch({type: "SET_CONTA", payload: Number(e.currentTarget.selectedOptions[0].value)})
-        dispatch({type: "SET_DESCR_CONTA", payload: e.currentTarget.value })
+    const setConta = (e: string) => {
+        dispatch({type: "SET_CONTA", payload: Number(e)})
+        dispatch({type: "SET_DESCR_CONTA", payload: e})
         setMensagem("")          
     }
 
@@ -162,7 +195,7 @@ const useInserirMov = () => {
         
         try {
             const mov:Transaction = {
-                id: 0,
+                id: Number(state.id),
                 data: useDate.parseDb(state.data),
                 amount: Number(state.amount),
                 description: state.description,
@@ -170,12 +203,18 @@ const useInserirMov = () => {
                 idcategory: state.idcategory as number,
             }
 
-            await axios.put(`${apiUrl}/movimentacoes`, mov)
-            sucesso = true         
-            setMensagem("Movimentação inserida com sucesso")          
+            if(modo === "INSERIR"){
+                const id = await inserirMovimentacao(mov)
+                dispatch({type: "SET_ID", payload: id.toString() })
+                setMensagem("Movimentação inserida com sucesso")
+            }else{
+                await updateMovimentacao(mov)
+                setMensagem("Movimentação inserida com sucesso")                
+            }
+            setCorMensagem("sucess")
         } catch (error) {
             console.log(error)
-            sucesso = false
+            setCorMensagem("error")
             setMensagem("Ocorreu um erro ao inserir movimentação!")          
         }
 
@@ -199,7 +238,11 @@ const useInserirMov = () => {
         setConta,
         setCorMensagem,
         setValor,
-        salvar        
+        salvar,
+        modo,
+        movimentacoes,
+        contas,
+        categorias              
     }
 
 

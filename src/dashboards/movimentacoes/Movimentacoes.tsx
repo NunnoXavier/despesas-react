@@ -1,32 +1,22 @@
-import { styled } from "@mui/material"
 import useDate from "../../utils/useDate"
 import useCurrency from "../../utils/useCurrency"
 import { Table, Head, Row, HeadRow } from "../../components/Table/Table"
 import useMyContext from "../../services/usecontext"
 import { DeleteForeverRounded as Apagar } from '@mui/icons-material'
-import { MouseEventHandler } from "react"
+import Editar from '@mui/icons-material/Edit'
 import { Movimentacao } from "../../services/type"
 
-const STh = styled('th')(() => ({
-    // background: '#33dd77',
-    padding: "0px 0px 0px 10px",
-    textAlign: "start",
-    border: "2px solid #f1f5f9"
-}))
-
-const STd = styled('td')(() => ({
-    border: "2px solid #f1f5f9"
-}))
-
 type MovimentacoesProps = {
-    ClassName?: string
+    className?: string,
+    edit?: boolean,
+    movimentacoes?: Movimentacao[],
+    editar?: (mov:Movimentacao) => void
 }
 
 const Movimentacoes = (props: MovimentacoesProps) =>{
-    const { movimentacoesFiltro, loadingMovimentacoes, errorMovimentacoes, deleteMovimentacao } = useMyContext()
-
-
-        
+    const { movimentacoesFiltro, loadingMovimentacoes, errorMovimentacoes, 
+        deleteMovimentacao } = useMyContext()
+            
     if(loadingMovimentacoes){
         //trocar por um placeholder
         return (
@@ -41,12 +31,10 @@ const Movimentacoes = (props: MovimentacoesProps) =>{
         )
     }
 
-    const apagar:MouseEventHandler<SVGSVGElement> = async(e) => {
-        const celula = e.currentTarget.parentElement as HTMLElement
-        const  linha = celula.parentElement as HTMLTableRowElement
-        const index = linha.rowIndex 
-        const mov:Movimentacao = movimentacoesFiltro[index -1]
+    const linhas = props.movimentacoes? props.movimentacoes : movimentacoesFiltro
 
+    const apagar = (registro:Movimentacao) => {
+        const mov = registro
         if(confirm(
             `Tem certeza que deseja apagar permanentemente o registro
             "${ mov.description }" no valor de R$${ mov.amount.toFixed(2) }`
@@ -55,9 +43,9 @@ const Movimentacoes = (props: MovimentacoesProps) =>{
             deleteMovimentacao(mov.id)
         }
     }        
-
+    
     return(
-        <div className={ `  ${props.ClassName}` }>
+        <div className={ `  ${props.className}` }>
             <div className="text-center">
                 <h1 className="text-xl font-bold">Movimentações</h1>
             </div>
@@ -65,36 +53,48 @@ const Movimentacoes = (props: MovimentacoesProps) =>{
             <Table>
                     <Head>
                         <HeadRow className="bg-cyan-800 text-slate-100">
-                            <STh></STh>
-                            <STh>Data</STh>
-                            <STh>Descrição</STh>
-                            <STh>Valor</STh>                        
-                            <STh>Categoria</STh>                        
-                            <STh>Conta</STh>                        
+                            <th className={`
+                                pl-2 border-r-2 border-slate-100 text-cyan-800
+                                ${ props.edit? 'block' : 'hidden' }
+                            `}>...</th>
+                            <th className="pl-2 border-r-2 border-slate-100">Data</th>
+                            <th className="pl-2 border-r-2 border-slate-100">Descrição</th>
+                            <th className="pl-2 border-r-2 border-slate-100">Valor</th>                        
+                            <th className="pl-2 border-r-2 border-slate-100">Categoria</th>                        
+                            <th className="pl-2 ">Conta</th>                        
                         </HeadRow>
                     </Head>
                 <tbody>
                 {
-                    movimentacoesFiltro
-                    .sort((a,b) => a.data < b.data? 1 : -1)
-                    .map(( trans ) => (
+                    linhas
+                    .sort((a,b) => a.data < b.data? 1 : 
+                                   a.id > b.id? 1 : -1)
+                    .map(( mov ) => (
                         <Row 
-                            key={ trans.id }
+                            key={ mov.id }
                             
                         >
-                            <STd><Apagar onClick={apagar} color="error" fontSize="small" /></STd>
-                            <STd>{useDate.dateBr( trans.data )}</STd>
-                            <STd>{trans.description}</STd>
-                            <STd 
-                                className={ `${ trans.category?.type == "D"? "text-red-800" : "text-blue-800" }` }
+                            <td className={`
+                                pl-2 border-r-2 border-slate-100
+                                ${ props.edit? 'block' : 'hidden' }
+                            `}>
+                                <Apagar onClick={() => apagar(mov)} color="error" fontSize="small" />
+                                <Editar onClick={ () => props.editar && props.editar(mov) }/>
+                            </td>
+                            <td className="pl-2 border-r-2 border-slate-100">{useDate.dateBr( mov.data )}</td>
+                            <td className="pl-2 border-r-2 border-slate-100">{mov.description}</td>
+                            <td className={`
+                                pl-2 border-r-2 border-slate-100
+                                ${ mov.category?.type == "D"? "text-red-800" : "text-blue-800" }
+                            `}
                             >
                                 {
-                                    `${trans.category?.type == "D"? "-" : "+"} 
-                                    ${useCurrency.toBR(trans.amount) }` 
+                                    `${mov.category?.type == "D"? "-" : "+"} 
+                                    ${useCurrency.toBR(mov.amount) }` 
                                 }
-                            </STd>
-                            <STd>{trans.category?.description}</STd>
-                            <STd>{trans.account?.description}</STd>
+                            </td>
+                            <td className="pl-2 border-r-2 border-slate-100">{mov.category?.description}</td>
+                            <td>{mov.account?.description}</td>
 
                         </Row>
                     ))

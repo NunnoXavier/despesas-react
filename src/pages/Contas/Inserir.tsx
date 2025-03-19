@@ -9,20 +9,25 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 
 const InserirCon = () => {
 
-    const { id, description, mensagem, totaisContas, salvar, setDescr, setId, deletar } = useInserirCon()
+    const { id, description, mensagem, totaisContas, salvar, 
+        setDescr, setId, deletar, modo } = useInserirCon()
         
     return (
         <div className="bg-slate-100">
-            <h3 className="text-2xl font-bold text-center">Inserir Conta</h3>
+            <h3 className="text-2xl font-bold text-center">{ modo === 'INSERIR'? 'Inserir' : 'Alterar' } Conta</h3>
             <div className="grid grid-cols-12 px-4 gap-4">
                 <Input 
                     id="id" 
                     label="ID"
                     bg="bg-slate-100"
                     type="number" 
-                    className="col-start-1 col-span-2"
+                    className={`
+                        col-start-1 col-span-2
+                        ${ modo === 'INSERIR'? 'text-slate-400' : 'text-cyan-600' }
+                    `}
                     value={id}
-                    onChange={setId}
+                    readOnly
+                    onChange={(e) => setId(Number(e.currentTarget.value))}
                     />
                 
                 <Input 
@@ -30,19 +35,25 @@ const InserirCon = () => {
                     label="Descrição"
                     type="text"
                     bg="bg-slate-100" 
-                    className="col-start-1 col-span-6"
-                    value={description}
-                    onChange={setDescr}                    
+                    className={`
+                        col-start-1 col-span-6
+                        ${ modo === 'INSERIR'? 'text-slate-400' : 'text-cyan-600' }
+                    `}
+                    value={description}                    
+                    onChange={(e) => setDescr(e.currentTarget.value)}                    
                     />
                 
                 <Button
-                    className="col-start-1 col-span-2" 
+                    className={`col-start-1 col-span-2 text-slate-100 ${
+                        `${ modo === 'INSERIR'? 'bg-emerald-800' : 'bg-cyan-800' }`
+                    }`}
                     onClick={salvar}
                 >
-                    Inserir
+                    {`${ modo === 'INSERIR'? 'Inserir' : 'Alterar' }`}
                 </Button>
                 <Button 
                     className="col-span-2 border border-gray-400 rounded-md" 
+                    onClick={() => setId(0)}
                 >
                     Cancelar
                 </Button>
@@ -78,7 +89,7 @@ const InserirCon = () => {
                                     <div className='text-xs flex justify-evenly space-x-2 items-center w-full mt-2'>
                                         <button 
                                             className='text-sky-600 hover:text-sky-400'
-                                            onClick={() => {}}
+                                            onClick={() => { setId(conta.id) }}
                                         >
                                             <EditIcon fontSize='small'/> editar
                                         </button>

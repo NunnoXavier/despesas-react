@@ -1,5 +1,5 @@
 import { Account } from "../../services/type"
-import { ChangeEvent, useReducer, useState } from "react"
+import { useEffect, useReducer, useState } from "react"
 import { SumAccount } from "./sumContas"
 import useMyContext from "../usecontext"
 
@@ -38,10 +38,23 @@ const initialState:IAccount = {
 
 
 const useInserirCon = () => {
+    const [ modo, setModo ] = useState< 'INSERIR'| 'ALTERAR' >('INSERIR')
     const [ state, dispatch ] = useReducer(reducer, initialState)
     const [ mensagem, setMensagem ] = useState("")
-
-    const { totalizarContas, deleteConta, inserirConta, movimentacoes } = useMyContext()
+    const { contas, totalizarContas, deleteConta, inserirConta, updateConta, movimentacoes } = useMyContext()
+    
+    useEffect(() => {
+        if(contas.map((conta) => conta.id).includes(state.id)){
+            setModo('ALTERAR')
+            dispatch({
+                type: "SET_DESCR", 
+                payload: contas.filter((conta) => conta.id===state.id)[0].description 
+            })
+        }else{
+            setModo("INSERIR")
+            dispatch({ type: "SET_DESCR", payload: "" })            
+        }
+    },[state.id])
 
     const totaisContas = totalizarContas(movimentacoes)
 
@@ -58,27 +71,31 @@ const useInserirCon = () => {
         }
     } 
 
-    const setId = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch({ type: "SET_ID", payload: Number(e.currentTarget.value) })
+    const setId = (e:number) => {
+        dispatch({ type: "SET_ID", payload: e })
         setMensagem("")
     }
-    const setDescr = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch({type: "SET_DESCR", payload: e.target.value })
+    const setDescr = (e: string) => {
+        dispatch({type: "SET_DESCR", payload: e })
         setMensagem("")
     }
-
 
     const salvar = async() => {
         if(!validarDados(state)) return
         
         try {
             const con:Account = {
-                id: 0,
+                id: state.id,
                 description: state.description,
             }
-
-            inserirConta(con)
-            setMensagem("Conta inserida com sucesso")          
+            if(modo === "INSERIR"){
+                const id:number = await inserirConta(con)
+                dispatch({ type: "SET_ID", payload: id })            
+                setMensagem("Conta inserida com sucesso")          
+            }else{
+                await updateConta(con)
+                setMensagem("Conta Alterada com sucesso")                
+            }
         } catch (error) {
             console.log(error)
             setMensagem("Ocorreu um erro ao inserir conta!")          
@@ -94,6 +111,7 @@ const useInserirCon = () => {
             Ao deleta-la você TAMBEM deletará todas as movimentações vinculadas. Confirma`)) return
         try {
             deleteConta(conta.id)
+            setId(0)
             setMensagem('conta deletada')            
         } catch (error:any) {
             setMensagem(`Erro ao deletar conta: 
@@ -109,7 +127,8 @@ const useInserirCon = () => {
         setDescr,
         salvar,
         deletar,
-        totaisContas        
+        totaisContas,
+        modo
     }
 
 

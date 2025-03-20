@@ -63,12 +63,54 @@ const useCategorias = () => {
         }
     }
 
+    const inserirCategoria = async (categoria: Category) => {
+        try {
+            setLoading(true)
+            const res = await axios.put(`${apiUrl}/categorias`, categoria)
+            const id:number = res.data.resposta.id
+            setCategorias([ ...categorias, { ...categoria, id: id } ])
+            return id
+        } catch (error:any) {
+            setError(error.message)
+            return 0
+        }finally{
+            setLoading(false)
+        }
+    }
+
+    const updateCategoria = async (categoria: Category) => {
+        try {
+            setLoading(true)
+            await axios.patch(`${apiUrl}/categorias`, categoria)
+            setCategorias( categorias.map((cat) => cat.id === categoria.id? categoria : cat) )
+        } catch (error:any) {
+            setError(error.message)
+        }finally{
+            setLoading(false)
+        }
+    }
+
+    const deleteCategoria = async (categoria: Category) => {
+        try {
+            setLoading(true)
+            await axios.delete(`${apiUrl}/categorias`, {data: {id: categoria.id}})
+            setCategorias( categorias.filter((cat) => cat.id !== categoria.id) )
+        } catch (error:any) {
+            setError(error.message)
+        }finally{
+            setLoading(false)
+        }
+    }
+
     return{
         categorias,
         loadingCategorias,
         errorCategorias,
         fetchCategorias,
-        totalizarCategorias
+        totalizarCategorias,
+        inserirCategoria,
+        updateCategoria,
+        deleteCategoria
     }
 }
 

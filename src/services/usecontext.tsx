@@ -13,6 +13,9 @@ type Context = {
     totalizarCategorias: (movimentacoes: Movimentacao[]) => SumCategory[],
     loadingCategorias: boolean,
     errorCategorias: FetchError,
+    inserirCategoria: (categoria: Category) => Promise<number>,
+    updateCategoria: (categoria: Category) => Promise<void>,
+    deleteCategoria: (categoria: Category) => Promise<void>,
     movimentacoes: Movimentacao[],
     movimentacoesFiltro: Movimentacao[],
     setMovimentacoesFiltro:(Movimentacoes: Movimentacao[]) => void,
@@ -35,6 +38,9 @@ const InitialContext = {
     totalizarCategorias:() => [],
     loadingCategorias: false,
     errorCategorias: null,
+    inserirCategoria: async() => 0,
+    updateCategoria: async() => undefined,
+    deleteCategoria: async() => undefined,
     movimentacoes: [],
     movimentacoesFiltro: [],
     setMovimentacoesFiltro: () => null,
@@ -55,7 +61,8 @@ const InitialContext = {
 const MyContext = createContext<Context>(InitialContext)
 
 export const  MyProvider = function({ children }: { children: React.ReactNode }){  
-    const { categorias, totalizarCategorias, loadingCategorias, errorCategorias, fetchCategorias } = useCategorias()
+    const { categorias, totalizarCategorias, loadingCategorias, errorCategorias, fetchCategorias, 
+        inserirCategoria, updateCategoria, deleteCategoria } = useCategorias()
     const { contas, totalizarContas, loadingContas, errorContas, fetchContas, deleteConta, inserirConta, updateConta } = useContas()
     const { movimentacoes, loadingMovimentacoes, errorMovimentacoes, fetchMovimentacoes, updateMovimentacao,
         movimentacoesFiltro, setMovimentacoesFiltro, deleteMovimentacao, inserirMovimentacao } = useMovimentacoes()
@@ -68,7 +75,8 @@ export const  MyProvider = function({ children }: { children: React.ReactNode })
 
     return(
         <MyContext.Provider value={{ 
-            categorias, totalizarCategorias, loadingCategorias, errorCategorias,
+            categorias, totalizarCategorias, loadingCategorias, errorCategorias, inserirCategoria,
+            updateCategoria, deleteCategoria,
             contas, totalizarContas, loadingContas, errorContas, deleteConta, inserirConta, updateConta,
             movimentacoesFiltro, setMovimentacoesFiltro, deleteMovimentacao, updateMovimentacao,
             movimentacoes,loadingMovimentacoes, errorMovimentacoes, inserirMovimentacao             

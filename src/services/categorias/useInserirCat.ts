@@ -1,6 +1,6 @@
 import { Category } from "../../services/type"
-import { ChangeEvent, useReducer, useState } from "react"
-import axios from 'axios'
+import { useEffect, useReducer, useState } from "react"
+import useMyContext from "../usecontext"
 
 export interface ICategory {
     id: any,
@@ -44,14 +44,30 @@ const initialState:ICategory = {
 
 
 const useInserirCat = () => {
-    const apiUrl = import.meta.env.VITE_API_URL
     const [ state, dispatch ] = useReducer(reducer, initialState)
     const [ mensagem, setMensagem ] = useState("")
+    const [ corMensagem, setCorMensage] = useState<'sucess'|'alert'|'error'>('sucess')
+    const [ modo, setModo ] = useState<'INSERIR'|'ALTERAR'>('INSERIR')
+    const { categorias, inserirCategoria, updateCategoria } = useMyContext()
     
+    useEffect(() => {
+        const categoriaAtual = categorias.filter((cat) => cat.id === state.id)[0] 
+        if( categoriaAtual ){
+            setModo("ALTERAR")
+            dispatch({ type: "SET_ID", payload: categoriaAtual.id })
+            dispatch({ type: "SET_DESCR", payload: categoriaAtual.description })
+            dispatch({ type: "SET_TYPE", payload: categoriaAtual.type })            
+        }else{
+            setModo("INSERIR")            
+            dispatch({ type: "SET_DESCR", payload: "" })
+            dispatch({ type: "SET_TYPE", payload: "" })
+        }
+    },[state.id])
 
     const validarDados = ( state:ICategory ):boolean => {
         try {
             if(state.description.length === 0){
+                setCorMensage("alert")
                 setMensagem("Descrição inválida")
                 return false
             }
@@ -62,34 +78,44 @@ const useInserirCat = () => {
         }
     } 
 
-    const setId = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch({ type: "SET_ID", payload: Number(e.currentTarget.value) })
+    const setId = (e:string) => {
+        dispatch({ type: "SET_ID", payload: Number(e) })
         setMensagem("")          
     }
-    const setDescr = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch({type: "SET_DESCR", payload: e.target.value })
+    const setDescr = (e:string) => {
+        dispatch({type: "SET_DESCR", payload: e })
         setMensagem("")          
     }
-    const setType = (e: ChangeEvent<HTMLSelectElement>) => {
-        dispatch({type: "SET_TYPE", payload: e.target.value })
+    const setType = (e:string) => {
+        dispatch({type: "SET_TYPE", payload: e })
         setMensagem("")          
     }
 
 
     const salvar = async() => {
         if(!validarDados(state)) return
-        
+
         try {
             const cat:Category = {
-                id: 0,
+                id: state.id,
                 description: state.description,
                 type: state.type
             }
 
-            await axios.put(`${apiUrl}/categorias`, cat)
-            setMensagem("Categoria inserida com sucesso")          
+            if(modo === "INSERIR"){
+                const id = await inserirCategoria(cat)
+                setId(id.toString())
+                setCorMensage("sucess")
+                setMensagem("Categoria inserida com sucesso")
+            }else{
+                updateCategoria(cat)            
+                setCorMensage("sucess")
+                setMensagem("Categoria alterada com sucesso")                
+            }
+
         } catch (error) {
             console.log(error)
+            setCorMensage("error")
             setMensagem("Ocorreu um erro ao inserir categoria!")          
         }
 
@@ -103,7 +129,10 @@ const useInserirCat = () => {
         setId,
         setDescr,
         setType,
-        salvar        
+        salvar,
+        categorias,
+        modo,
+        corMensagem       
     }
 
 

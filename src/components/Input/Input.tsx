@@ -8,10 +8,11 @@ type InputProps = {
     value?: any,
     onChange: (e:ChangeEvent<HTMLInputElement>) => void,
     id?: string,
-    readOnly?: boolean
+    readOnly?: boolean,
+    ref?: React.Ref<HTMLInputElement>
 }
 
-const Input = ( { type, className, label, bg, value, onChange, id, readOnly }:InputProps ) => {
+const Input = ( { type, className, label, bg, value, onChange, id, readOnly, ref }:InputProps ) => {
 
     return (
         <div className={`${className} border border-slate-300 rounded-md px-2 relative h-fit`}>
@@ -19,6 +20,7 @@ const Input = ( { type, className, label, bg, value, onChange, id, readOnly }:In
             <input 
                 type={ type } 
                 id={id}
+                ref={ref}
                 className="w-full py-2 outline-0"
                 value={value}
                 onChange={onChange} 

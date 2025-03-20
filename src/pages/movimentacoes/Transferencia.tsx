@@ -4,6 +4,7 @@ import Input from '../../components/Input/Input'
 import Select from '../../components/Select/Select'
 import Button from "../../components/Button/Button"
 import useTrans from "../../services/movimentacoes/useTrans"
+import Contas from '../../dashboards/movimentacoes/Contas'
 
 const Transferencia = () => {
 
@@ -27,7 +28,7 @@ const Transferencia = () => {
                     bg="bg-slate-100" 
                     className="col-start-1 col-span-3"
                     value={data.slice(0,10)}
-                    onChange={setData}                                    
+                    onChange={(e) => setData(e.currentTarget.value.slice(0,10))}                                    
                     />
                 
                 <Input 
@@ -37,7 +38,7 @@ const Transferencia = () => {
                     bg="bg-slate-100" 
                     className="col-start-1 col-span-3"
                     value={amount}
-                    onChange={setValor}
+                    onChange={(e) => setValor(e.currentTarget.value)}
                     />
 
                 <Select 
@@ -45,7 +46,7 @@ const Transferencia = () => {
                     value={descrContaOrigem}
                     label="Conta de Origem"
                     bg="bg-slate-100"
-                    onChange={setContaOrigem}
+                    onChange={(e) => setContaOrigem(e.currentTarget.value)}
                     >
                     <option value={0}></option>
                     {
@@ -62,7 +63,7 @@ const Transferencia = () => {
                     value={descrContaDestino}
                     label="Conta de Destino"
                     bg="bg-slate-100"
-                    onChange={setContaDestino}
+                    onChange={(e) => setContaDestino(e.currentTarget.value)}
                     >
                     <option value={0}></option>
                     {
@@ -75,22 +76,18 @@ const Transferencia = () => {
                 </Select>
                 
                 <Button
-                    className="col-start-1 col-span-2" 
+                    className="col-start-1 col-span-2 bg-emerald-800 text-slate-100" 
                     onClick={salvar}
                 >
                     Transferir
                 </Button>
-                <Button 
-                    className="col-span-2 border border-gray-400 rounded-md" 
-                >
-                    Cancelar
-                </Button>
-
-
             </div>
 
             <div className={`text-center p-10 m-2`}>
                 <p className={`font-bold text-red-500`}>{ mensagem }</p>
+            </div>
+            <div className="p-2 grid grid-cols-2">
+                <Contas ClassName="col-span-2 sm:col-span-1"/>
             </div>
         </div>
     )

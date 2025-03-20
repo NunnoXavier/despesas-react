@@ -1,9 +1,9 @@
 import { Transaction } from "../../services/type"
-import { ChangeEvent, useEffect, useReducer, useState } from "react"
+import {  useEffect, useReducer, useState } from "react"
 import useDate from "../../utils/useDate";
-import axios from 'axios'
 import useCategorias from "../categorias/useCategorias";
 import useContas from "../contas/useContas";
+import useMyContext from "../usecontext";
 
 export interface ITransaction {
     id: string,
@@ -74,11 +74,11 @@ const initialState:ITransaction = {
 
 
 const useTrans = () => {
-    const apiUrl = import.meta.env.VITE_API_URL;
     const [ state, dispatch ] = useReducer(reducer, initialState)
     const [ mensagem, setMensagem ] = useState("")
     const { categorias, fetchCategorias  } = useCategorias()
     const { contas, fetchContas } = useContas()
+    const {  inserirMovimentacao } = useMyContext()
 
     useEffect(() => {
         fetchCategorias()
@@ -114,25 +114,24 @@ const useTrans = () => {
         }
     } 
 
-    const setValor = (e: ChangeEvent<HTMLInputElement>) => {
+    const setValor = (e: string) => {
         try {
-            const valor = e.currentTarget.value
-            dispatch({ type: "SET_VALOR", payload: valor })                
+            dispatch({ type: "SET_VALOR", payload: e })                
 
         } catch (error) {
             return
         }
     }
-    const setData = (e: ChangeEvent<HTMLInputElement>) => {
-        dispatch({ type: "SET_DATA", payload: e.currentTarget.value.slice(0,10) })
+    const setData = (e: string) => {
+        dispatch({ type: "SET_DATA", payload: e })
     }
-    const setContaOrigem = (e: ChangeEvent<HTMLSelectElement>) => {
-        dispatch({type: "SET_CONTAO", payload: Number(e.currentTarget.selectedOptions[0].value)})
-        dispatch({type: "SET_DESCR_CONTAO", payload: e.currentTarget.value })
+    const setContaOrigem = (e: string) => {
+        dispatch({type: "SET_CONTAO", payload: Number(e)})
+        dispatch({type: "SET_DESCR_CONTAO", payload: e })
     }
-    const setContaDestino = (e: ChangeEvent<HTMLSelectElement>) => {
-        dispatch({type: "SET_CONTAD", payload: Number(e.currentTarget.selectedOptions[0].value)})
-        dispatch({type: "SET_DESCR_CONTAD", payload: e.currentTarget.value })
+    const setContaDestino = (e: string) => {
+        dispatch({type: "SET_CONTAD", payload: Number(e)})
+        dispatch({type: "SET_DESCR_CONTAD", payload: e })
     }
 
     const salvar = async() => {
@@ -172,8 +171,8 @@ const useTrans = () => {
                 idcategory: categoriaDestino.id,
             }
             
-            await axios.put(`${apiUrl}/movimentacoes`, movO)
-            await axios.put(`${apiUrl}/movimentacoes`, movD)
+            await inserirMovimentacao(movO)
+            await inserirMovimentacao(movD)
             setMensagem("Tranferência efetuada com sucesso")          
         } catch (error:any) {
             setMensagem("Ocorreu um erro ao efetuar tranferencia! " + error.message)          

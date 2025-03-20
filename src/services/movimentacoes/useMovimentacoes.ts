@@ -19,6 +19,7 @@ const useMovimentacoes = () => {
         fetchCategorias()
         fetchContas()
     },[])
+
     
     const fetchMovimentacoes = async () => {
         try {
@@ -71,7 +72,8 @@ const useMovimentacoes = () => {
                 category: categorias.filter((cat) => cat.id === registro.idcategory)[0],
                 account: contas.filter((con) => con.id === registro.idaccount)[0],
             }
-            setMovimentacoes([ ...movimentacoes, { ...mov } ])
+            setMovimentacoes((movimentacoesAtual) => [ ...movimentacoesAtual, { ...mov } ])
+            console.log([ ...movimentacoes, { ...mov } ])
             return novoId
         } catch (error:any) {
             setError(error.message)
@@ -90,7 +92,6 @@ const useMovimentacoes = () => {
                 category: categorias.filter((cat) => cat.id === registro.idcategory)[0],
                 account: contas.filter((con) => con.id === registro.idaccount)[0],
             }
-            console.log(mov)            
             setMovimentacoes(movimentacoes.map((movimentacao) => movimentacao.id === mov.id? mov : movimentacao))
         } catch (error:any) {
             setError(error.message)

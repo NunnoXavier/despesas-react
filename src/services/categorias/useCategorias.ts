@@ -68,7 +68,7 @@ const useCategorias = () => {
             setLoading(true)
             const res = await axios.put(`${apiUrl}/categorias`, categoria)
             const id:number = res.data.resposta.id
-            setCategorias([ ...categorias, { ...categoria, id: id } ])
+            setCategorias((categorias) => [ ...categorias, { ...categoria, id: id } ])
             return id
         } catch (error:any) {
             setError(error.message)

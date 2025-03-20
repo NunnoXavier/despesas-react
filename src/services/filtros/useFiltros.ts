@@ -105,7 +105,8 @@ const useFiltros = () => {
         removeFilterCategories,
         insertFilterCategories,
         setFilterInitialDate,
-        setFilterFinalDate
+        setFilterFinalDate,
+        filter
     }
 }
 

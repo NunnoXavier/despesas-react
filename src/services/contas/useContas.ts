@@ -51,7 +51,7 @@ const useContas = () => {
             setLoading(true)
             const res = await axios.put(`${apiUrl}/contas`, conta)
             const id:number = res.data.resposta.id
-            setContas( [ ...contas, { ...conta, id: id } ] )
+            setContas((contas) => [ ...contas, { ...conta, id: id } ] )
             return id
         } catch (error:any) {
             setError(error.message)

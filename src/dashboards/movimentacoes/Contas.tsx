@@ -23,7 +23,7 @@ const STd = styled('td')(() => ({
 }))
 
 const Contas = (props: ContasProps) =>{
-    const { movimentacoes, totalizarContas, loadingContas, errorContas } = useMyContext()
+    const {  sumAccounts, loadingContas, errorContas } = useMyContext()
 
     if(loadingContas){
         //trocar por um placeholder
@@ -39,8 +39,7 @@ const Contas = (props: ContasProps) =>{
         )
     }
 
-    const sumAccounts = totalizarContas(movimentacoes)    
-
+    
     return(
         <div className={ `  ${props.ClassName}` }>
             <div className="text-center">

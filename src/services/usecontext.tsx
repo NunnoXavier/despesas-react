@@ -76,7 +76,7 @@ export const  MyProvider = function({ children }: { children: React.ReactNode })
 
     useEffect(() => {
         setSumAccounts(totalizarContas(movimentacoes))
-    }, [movimentacoes])
+    }, [movimentacoes,contas])
     
     return(
         <MyContext.Provider value={{ 

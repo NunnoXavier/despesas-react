@@ -1,4 +1,4 @@
-import { ChangeEvent } from "react"
+import { ChangeEvent, useEffect } from "react"
 
 type InputProps = {
     type?: | 'text' | 'date' | 'tel' | 'email' | 'number' | 'password',
@@ -9,10 +9,11 @@ type InputProps = {
     onChange: (e:ChangeEvent<HTMLInputElement>) => void,
     id?: string,
     readOnly?: boolean,
-    ref?: React.Ref<HTMLInputElement>
+    ref?: React.Ref<HTMLInputElement> 
 }
 
 const Input = ( { type, className, label, bg, value, onChange, id, readOnly, ref }:InputProps ) => {
+
 
     return (
         <div className={`${className} border border-slate-300 rounded-md px-2 relative h-fit`}>
@@ -22,9 +23,9 @@ const Input = ( { type, className, label, bg, value, onChange, id, readOnly, ref
                 id={id}
                 ref={ref}
                 className="w-full py-2 outline-0"
-                value={value}
+                value={ value }
                 onChange={onChange} 
-                readOnly={readOnly}                                   
+                readOnly={readOnly}                                 
 
             />
         </div>

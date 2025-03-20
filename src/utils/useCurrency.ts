@@ -15,9 +15,26 @@ function toISO(valor: string){
     }
 }
 
+function maskCurrency (rawValue: string){
+    let numericValue = rawValue.replace(/\D/g, ""); // Remove caracteres não numéricos
+    numericValue = (parseInt(numericValue, 10) || 0).toString();
+
+    if (numericValue.length < 3) {
+      numericValue = numericValue.padStart(3, "0");
+    }
+
+    let cents = numericValue.slice(-2);
+    let reais = numericValue.slice(0, -2);
+    //reais = reais.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+
+    return `${reais}.${cents}`;
+}
+
 const useCurrency = {
     toBR,
-    toISO
+    toISO,
+    maskCurrency
 }
+
 
 export default useCurrency

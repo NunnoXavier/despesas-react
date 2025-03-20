@@ -41,7 +41,7 @@ const useInserirCon = () => {
     const [ modo, setModo ] = useState< 'INSERIR'| 'ALTERAR' >('INSERIR')
     const [ state, dispatch ] = useReducer(reducer, initialState)
     const [ mensagem, setMensagem ] = useState("")
-    const { contas, totalizarContas, deleteConta, inserirConta, updateConta, movimentacoes } = useMyContext()
+    const { contas, sumAccounts, deleteConta, inserirConta, updateConta, movimentacoes } = useMyContext()
     
     useEffect(() => {
         if(contas.map((conta) => conta.id).includes(state.id)){
@@ -55,9 +55,7 @@ const useInserirCon = () => {
             dispatch({ type: "SET_DESCR", payload: "" })            
         }
     },[state.id])
-
-    const totaisContas = totalizarContas(movimentacoes)
-
+    
     const validarDados = ( state:IAccount ):boolean => {
         try {
             if(state.description.length === 0){
@@ -127,7 +125,7 @@ const useInserirCon = () => {
         setDescr,
         salvar,
         deletar,
-        totaisContas,
+        sumAccounts,
         modo
     }
 

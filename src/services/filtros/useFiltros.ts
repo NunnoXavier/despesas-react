@@ -87,10 +87,10 @@ const useFiltros = () => {
 
     const filter = ( movimentacao: Movimentacao[] ) => {
         setMovimentacoesFiltro( movimentacao
-            .filter(filtered => state.filterInitialDate.length > 0 
-                && filtered.data.toString().slice(0,10) >= state.filterInitialDate)
-            .filter( filtered => state.filterFinalDate.length > 0 
-                && filtered.data.toString().slice(0,10) <= state.filterFinalDate)            
+            .filter(filtered => state.filterInitialDate.length === 0 || 
+                filtered.data.toString().slice(0,10) >= state.filterInitialDate)
+            .filter( filtered => state.filterFinalDate.length === 0 || 
+                filtered.data.toString().slice(0,10) <= state.filterFinalDate)            
             .filter( filtered => state.filterCategories.length === 0 ||
                 state.filterCategories.includes( filtered.category.description ))
             )

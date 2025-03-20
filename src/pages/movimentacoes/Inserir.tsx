@@ -3,6 +3,7 @@ import Input from '../../components/Input/Input'
 import Select from '../../components/Select/Select'
 import Button from "../../components/Button/Button"
 import Movimentacoes from "../../dashboards/movimentacoes/Movimentacoes"
+import useCurrency from '../../utils/useCurrency'
 
 const InserirMov = () => {
     const { id, movimentacoes, setId, description, setDescr, data, setData,
@@ -63,7 +64,9 @@ const InserirMov = () => {
                         ${ modo === "INSERIR"? 'text-slate-400' : 'text-cyan-600' }
                     `}
                     value={amount}
-                    onChange={(e) => setValor(e.currentTarget.value)}
+                    onChange={
+                        (e) => setValor(useCurrency.maskCurrency(e.currentTarget.value))
+                    }
                     />
 
                 <Select                      

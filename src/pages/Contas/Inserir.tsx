@@ -9,7 +9,7 @@ import AccountBalanceIcon from '@mui/icons-material/AccountBalance'
 
 const InserirCon = () => {
 
-    const { id, description, mensagem, totaisContas, salvar, 
+    const { id, description, mensagem, sumAccounts, salvar, 
         setDescr, setId, deletar, modo } = useInserirCon()
         
     return (
@@ -68,7 +68,7 @@ const InserirCon = () => {
                     <h2 className='text-center text-lg font-black mb-2'>Lista de Contas</h2>
                     <div className='grid md:grid-cols-3 gap-4'>
                         {
-                            totaisContas.map((conta) => (
+                            sumAccounts.map((conta) => (
                                 <div key={conta.id} className="col-span-1 shadow-lg rounded-md p-2">
                                     <div className='flex space-x-4 justify-between items-center mb-2'>
                                         <div className="text-slate-400">

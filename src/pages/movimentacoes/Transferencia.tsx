@@ -5,6 +5,7 @@ import Select from '../../components/Select/Select'
 import Button from "../../components/Button/Button"
 import useTrans from "../../services/movimentacoes/useTrans"
 import Contas from '../../dashboards/movimentacoes/Contas'
+import useCurrency from "../../utils/useCurrency"
 
 const Transferencia = () => {
 
@@ -38,7 +39,7 @@ const Transferencia = () => {
                     bg="bg-slate-100" 
                     className="col-start-1 col-span-3"
                     value={amount}
-                    onChange={(e) => setValor(e.currentTarget.value)}
+                    onChange={(e) => setValor(useCurrency.maskCurrency(e.currentTarget.value))}
                     />
 
                 <Select 

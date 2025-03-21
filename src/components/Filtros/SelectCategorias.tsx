@@ -1,14 +1,14 @@
 import CardCategoria from "./CardCategoria"
 import { Box, Popover as Popper } from "@mui/material"
-import { MouseEvent, useState } from "react"
+import { useState } from "react"
 import ArrowDropDownSharpIcon from '@mui/icons-material/ArrowDropDownSharp'
 import useMyContext from "../../services/usecontext"
 
 type SelectCatProps = { 
     className?: string, 
     filterCategories?:string[], 
-    insertFilterCategories?: (name:string) => void, 
-    removeFilterCategories: (name:string) => void,
+    insertFilterCategories?: (id:string) => void, 
+    removeFilterCategories: (id:string) => void,
     setFilter?: ( cat: string[] ) => void
 }
 
@@ -30,13 +30,13 @@ const SelectCategorias = ( { className, filterCategories, insertFilterCategories
         )
     }
 
-    const clickItem = ( event:MouseEvent<HTMLButtonElement> ) => {    
-        insertFilterCategories && insertFilterCategories(event.currentTarget.innerHTML)
+    const clickItem = ( id: number ) => {    
+        insertFilterCategories && insertFilterCategories(id.toString())
         setAnchorEl(null)
     }
 
     const tudo = () => {
-        setFilter && setFilter( categorias.map((cat) => cat.description) )
+        setFilter && setFilter( categorias.map((cat) => cat.id.toString()) )
     }
     const limpar = () => {
         setFilter && setFilter( [] )
@@ -52,10 +52,12 @@ const SelectCategorias = ( { className, filterCategories, insertFilterCategories
                 rounded-lg rounded-r-none items-center px-2 pt-4 pb-2 gap-1 flex-wrap min-h-12"
                 >
                     {
-                        filterCategories?.map((description, index) => {
+                        filterCategories?.map((id, index) => {
+                            if(!id || id === "") return 
                             return (
                                 <CardCategoria key={index} 
-                                    nome={description}
+                                    id={id}
+                                    nome={categorias.filter((categoria) => categoria.id === Number(id))[0]?.description}
                                     apagar={removeFilterCategories}
                                 />
                             )
@@ -77,7 +79,7 @@ const SelectCategorias = ( { className, filterCategories, insertFilterCategories
                             return (
                                 <button  className="hover:bg-gray-300 hover:text-slate-600 w-full"
                                     key={categoria.id} 
-                                    onClick={ clickItem }
+                                    onClick={ () => clickItem(categoria.id) }
                                 >{categoria.description}</button>
                             )
                         })}

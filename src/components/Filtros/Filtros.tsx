@@ -3,24 +3,23 @@ import useFiltros from "../../services/filtros/useFiltros"
 import SelectCategorias from "./SelectCategorias"
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-
+import { useSearchParams } from "react-router-dom";
 
 type FiltrosProps = {
     className?: string,
 }
 
 const Filtros = ( props: FiltrosProps ) => {
-    const { 
-        filterFinalDate, filterInitialDate, setFilterFinalDate, setFilterInitialDate, 
-        filterCategories,insertFilterCategories, removeFilterCategories, setFilterCategories
-    } = useFiltros()
-
+    const { filterCategories, filterInitialDate, filterFinalDate, 
+        setFilterFinalDate, setFilterInitialDate, setFilterCategories, 
+        insertFilterCategories, removeFilterCategories } = useFiltros()
     const [ open, setOpen ] = useState(false)
-
+    const [ searchParams ] = useSearchParams()
+   
     return (        
         <div className="bg-slate-100">
             <div className={`${ props.className } pt-2 overflow-hidden transition-all duration-300 ease-in-out
-            ${ open? 'opacity-100 h-auto translate-y-5' : 'opacity-0 h-0 translate-y-0' }
+            ${ open ? 'opacity-100 h-auto translate-y-5' : 'opacity-0 h-0 translate-y-0' }
             bg-slate-100 text-slate-400 gap-2 px-2 grid grid-cols-7`}>            
                 <SelectCategorias 
                 filterCategories={filterCategories}
@@ -33,9 +32,8 @@ const Filtros = ( props: FiltrosProps ) => {
                 <span className="text-xs rounded-sm px-1 absolute left-2 -top-2 bg-slate-100">Data Inicial</span>        
                     <input className=" font-bold  w-full py-2 outline-0"
                         type="date" 
-                        value={filterInitialDate}
-                        
-                        onChange={setFilterInitialDate}
+                        value={filterInitialDate}                        
+                        onChange={(e) => setFilterInitialDate(e.currentTarget.value.slice(0,10))}
                     />
                 </div>
 
@@ -44,13 +42,20 @@ const Filtros = ( props: FiltrosProps ) => {
                     <input className=" font-bold w-full py-2 outline-0"
                         type="date" 
                         value={filterFinalDate}
-                        onChange={setFilterFinalDate}
+                        onChange={(e) => setFilterFinalDate(e.currentTarget.value.slice(0,10))}
                     />
                 </div>
             </div>
             <button 
-            onClick={() => setOpen(!open)}
-            className="my-2 h-10 opacity-20 hover:opacity-100 transition-all duration-300"
+                onClick={() => setOpen(!open)}
+                className={`
+                    my-2 h-10 opacity-20 hover:opacity-100 transition-all duration-300
+                    ${  
+                        searchParams.toString().length === 0 || open?
+                        'animate-none' : 'animate-bounce'
+                        
+                    }
+                `}
             >
                 { open? <KeyboardArrowUpIcon fontSize="large" /> : <ExpandMoreIcon fontSize="large"/> }
             </button>

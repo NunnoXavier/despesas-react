@@ -87,9 +87,10 @@ const useInserirCon = () => {
                 description: state.description,
             }
             if(modo === "INSERIR"){
-                const id:number = await inserirConta(con)
-                dispatch({ type: "SET_ID", payload: id })            
-                setMensagem("Conta inserida com sucesso")          
+                await inserirConta(con)
+                setMensagem("Conta inserida com sucesso")
+                dispatch({ type: "SET_ID", payload: 0 })
+                dispatch({ type: "SET_DESCR", payload: "" })
             }else{
                 await updateConta(con)
                 setMensagem("Conta Alterada com sucesso")                

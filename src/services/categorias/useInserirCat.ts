@@ -103,10 +103,11 @@ const useInserirCat = () => {
             }
 
             if(modo === "INSERIR"){
-                const id = await inserirCategoria(cat)
-                setId(id.toString())
+                await inserirCategoria(cat)
                 setCorMensage("sucess")
                 setMensagem("Categoria inserida com sucesso")
+                dispatch({ type: "SET_ID", payload: 0 })
+                dispatch({ type: "SET_DESCR", payload: "" })                
             }else{
                 updateCategoria(cat)            
                 setCorMensage("sucess")

@@ -204,9 +204,10 @@ const useInserirMov = () => {
             }
 
             if(modo === "INSERIR"){
-                const id = await inserirMovimentacao(mov)
-                dispatch({type: "SET_ID", payload: id.toString() })
+                await inserirMovimentacao(mov)
                 setMensagem("Movimentação inserida com sucesso")
+                dispatch({ type: "SET_ID", payload: "" })
+                dispatch({ type: "SET_DESCR", payload: "" })
             }else{
                 await updateMovimentacao(mov)
                 setMensagem("Movimentação inserida com sucesso")                

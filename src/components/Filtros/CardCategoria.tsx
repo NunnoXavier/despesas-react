@@ -1,7 +1,7 @@
-const CardCategoria = ({nome, apagar}: { nome:string, apagar: (nome: string) => void }) => {
+const CardCategoria = ({ id, nome, apagar}: { id:string, nome:string, apagar: (id: string) => void }) => {
 
     const apagarNome = () => {
-        apagar(nome)
+        apagar(id)
     }
 
     return (

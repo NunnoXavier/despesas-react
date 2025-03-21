@@ -6,7 +6,7 @@ import Movimentacoes from "../../dashboards/movimentacoes/Movimentacoes"
 import useCurrency from '../../utils/useCurrency'
 
 const InserirMov = () => {
-    const { id, movimentacoes, setId, description, setDescr, data, setData,
+    const { id, setId, description, setDescr, data, setData,
         amount, setValor, descrCategoria, setCategoria, descrConta, setConta,
         salvar, mensagem, corMensagem, modo, categorias, contas } = useInserirMov()
 
@@ -143,7 +143,6 @@ const InserirMov = () => {
             <div className="grid grid-cols-12 invisible md:visible">
                 <Movimentacoes 
                 className="col-span-12 md:col-span-10 md:col-start-2" 
-                movimentacoes={movimentacoes}
                 edit
                 editar={(mov) => setId(mov.id.toString())}
                 />

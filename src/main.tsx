@@ -2,16 +2,11 @@
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import { MyProvider } from './services/usecontext.tsx'
 
 
 createRoot(document.getElementById('root')!).render(
-  // <StrictMode>
-
-
-   <MyProvider>
+  // <MyProvider>
     <App />
-  </MyProvider>
+  // </MyProvider>
 
-    // </StrictMode>,
 )

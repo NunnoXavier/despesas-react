@@ -3,8 +3,9 @@ import Categorias from "./Categorias"
 import Contas from "./Contas"
 
 const DSBDMovimentacoes = () => {
+
     return (
-        <section className="p-2 bg-slate-100 min-h-5/6 rounded-b-2xl">
+        <section className="p-2 bg-slate-100 min-h-5/6 rounded-b-2xl">    
             <div className="w-full text-center">
                 {/* <h3>Resumo de Movimentações</h3> */}
             </div>

@@ -18,7 +18,6 @@ type Context = {
     deleteCategoria: (categoria: Category) => Promise<void>,
     movimentacoes: Movimentacao[],
     movimentacoesFiltro: Movimentacao[],
-    setMovimentacoesFiltro:(Movimentacoes: Movimentacao[]) => void,
     loadingMovimentacoes: boolean,
     errorMovimentacoes: FetchError
     deleteMovimentacao: (id:number) => void,
@@ -43,7 +42,6 @@ const InitialContext = {
     deleteCategoria: async() => undefined,
     movimentacoes: [],
     movimentacoesFiltro: [],
-    setMovimentacoesFiltro: () => null,
     loadingMovimentacoes: false,
     errorMovimentacoes: null,
     deleteMovimentacao: () => null,
@@ -65,7 +63,7 @@ export const  MyProvider = function({ children }: { children: React.ReactNode })
         inserirCategoria, updateCategoria, deleteCategoria } = useCategorias()
     const { contas, totalizarContas, loadingContas, errorContas, fetchContas, deleteConta, inserirConta, updateConta } = useContas()
     const { movimentacoes, loadingMovimentacoes, errorMovimentacoes, fetchMovimentacoes, updateMovimentacao,
-        movimentacoesFiltro, setMovimentacoesFiltro, deleteMovimentacao, inserirMovimentacao } = useMovimentacoes()
+        movimentacoesFiltro, deleteMovimentacao, inserirMovimentacao } = useMovimentacoes()
     const [ sumAccounts, setSumAccounts ] = useState<SumAccount[]>([])
     
     useEffect(() => {
@@ -83,7 +81,7 @@ export const  MyProvider = function({ children }: { children: React.ReactNode })
             categorias, totalizarCategorias, loadingCategorias, errorCategorias, inserirCategoria,
             updateCategoria, deleteCategoria,
             contas,  sumAccounts, loadingContas, errorContas, deleteConta, inserirConta, updateConta,
-            movimentacoesFiltro, setMovimentacoesFiltro, deleteMovimentacao, updateMovimentacao,
+            movimentacoesFiltro, deleteMovimentacao, updateMovimentacao,
             movimentacoes,loadingMovimentacoes, errorMovimentacoes, inserirMovimentacao             
         }}>
             {children}

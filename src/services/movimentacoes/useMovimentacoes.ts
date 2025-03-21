@@ -4,23 +4,28 @@ import axios from 'axios'
 import  { FetchError } from "../usecontext"
 import useCategorias from "../categorias/useCategorias"
 import useContas from "../contas/useContas"
+import { useSearchParams } from "react-router-dom"
+import useDate from "../../utils/useDate"
 
 const useMovimentacoes = () => {
     const apiUrl = import.meta.env.VITE_API_URL;
     
     const [ movimentacoes, setMovimentacoes ] = useState<Movimentacao[]>([])
-    const [ movimentacoesFiltro, setMovimentacoesFiltro ] = useState<Movimentacao[]>([])
     const [ loadingMovimentacoes, setLoading ] = useState<boolean>(false)
     const [ errorMovimentacoes, setError ] = useState<FetchError>(null)
     const { categorias, fetchCategorias } = useCategorias()
     const { contas, fetchContas } = useContas()
+    const [ searchParams ] = useSearchParams()
+
+    const filterCategories = searchParams.get('categorias')?.split(',')
+    const filterInitialDate = searchParams.get('dataI')
+    const filterFinalDate = searchParams.get('dataF')
 
     useEffect(() => {
         fetchCategorias()
         fetchContas()
     },[])
-
-    
+        
     const fetchMovimentacoes = async () => {
         try {
             setLoading(true)
@@ -40,20 +45,23 @@ const useMovimentacoes = () => {
                 }
             })
             setMovimentacoes(mov)
-            setMovimentacoesFiltro(mov)            
         } catch (error:any) {
             setError(error.message)
         }finally{
             setLoading(false)
         }
     }
-    
+
+    const movimentacoesFiltro = movimentacoes
+        .filter((mov) => !filterCategories || filterCategories.includes(mov.idcategory.toString()))
+        .filter((mov) => !filterInitialDate || useDate.parse(mov.data) >= filterInitialDate)
+        .filter((mov) => !filterFinalDate || useDate.parse(mov.data) <= filterFinalDate)
+
     const deleteMovimentacao = async(id:number) => {
         try {
             setLoading(true)
             await axios.delete(`${apiUrl}/movimentacoes`, { data: { id: id } })
             setMovimentacoes( movimentacoes.filter((m) => m.id!== id))
-            setMovimentacoesFiltro( movimentacoes.filter((m) => m.id!== id))
         } catch (error:any) {
             setError(error.message)
         }finally{
@@ -107,7 +115,6 @@ const useMovimentacoes = () => {
         errorMovimentacoes,
         fetchMovimentacoes,
         movimentacoesFiltro,
-        setMovimentacoesFiltro,
         deleteMovimentacao,
         inserirMovimentacao,
         updateMovimentacao,

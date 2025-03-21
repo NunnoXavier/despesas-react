@@ -130,23 +130,21 @@ const InserirCat = () => {
                             </p>
                             <div className='col-span-4 flex justify-end'>
                                 <div className='flex flex-col items-start text-xs'>
-                                    <p>
-                                        <Editar 
-                                            onClick={() => {
-                                                setId(categoria.id.toString())
-                                                idRef.current?.focus()
-                                            }} 
-                                            fontSize='small' className='text-slate-500'
-                                        />
+                                    <button
+                                        onClick={() => {
+                                            setId(categoria.id.toString())
+                                            idRef.current?.focus()
+                                        }}
+                                    >
+                                        <Editar fontSize='small' className='text-slate-500' />
                                         <span className='text-slate-400'>editar</span>
-                                    </p>
-                                    <p>
-                                        <Apagar 
-                                            fontSize='small' className='text-slate-500'
-                                            onClick={() => handleDelete(categoria)}
-                                        />
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(categoria)}
+                                    >                                        
+                                        <Apagar fontSize='small' className='text-slate-500' />
                                         <span className='text-slate-400'>deletar</span>
-                                    </p>
+                                    </button>
                                 </div>
                             </div>
                         </div>

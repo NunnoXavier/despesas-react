@@ -52,10 +52,13 @@ const InserirCon = () => {
                     {`${ modo === 'INSERIR'? 'Inserir' : 'Alterar' }`}
                 </Button>
                 <Button 
-                    className="col-span-2 border border-gray-400 rounded-md" 
+                    className={
+                        `col-span-2 border border-gray-400 rounded-md
+                        ${ modo === 'INSERIR'? 'hidden' : 'block' }
+                    `}
                     onClick={() => setId(0)}
                 >
-                    Cancelar
+                    Nova Conta
                 </Button>
             </div>
 

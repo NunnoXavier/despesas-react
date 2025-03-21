@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect } from "react"
+import { ChangeEvent } from "react"
 
 type InputProps = {
     type?: | 'text' | 'date' | 'tel' | 'email' | 'number' | 'password',

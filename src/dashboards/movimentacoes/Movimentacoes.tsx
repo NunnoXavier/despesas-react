@@ -67,8 +67,15 @@ const Movimentacoes = (props: MovimentacoesProps) =>{
                 <tbody>
                 {
                     linhas
-                    .sort((a,b) => a.data < b.data? 1 : 
-                                   a.id > b.id? 1 : -1)
+                    .sort((a,b) => {
+                        if(useDate.parse(a.data) < useDate.parse(b.data)){
+                            return 1
+                        }else if(useDate.parse(a.data) === useDate.parse(b.data)){
+                            return a.id < b.id? 1 : -1
+                        }else{
+                            return -1
+                        }
+                    })
                     .map(( mov ) => (
                         <Row 
                             key={ mov.id }
